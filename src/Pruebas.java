@@ -5,7 +5,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
+import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unused")
 public class Pruebas extends TestCase {
@@ -16,40 +18,6 @@ public class Pruebas extends TestCase {
 	public static void main(String[] args) {
 		StringBuilder builder = new StringBuilder(args[0]);
 		ArrayList<String> strings = new ArrayList<String>();
-
-		// permutation("","abc");
-		// reverseInteger(-451);
-		// intToBinaryString(-115);
-		// numberOfOnes(-115);
-		// fizzBuzz(50);
-		// primeNumbers(49);
-		// combinations("abcd", 4);
-		// factors(756);
-		// System.out.println(largestNumberSubset(250001, 2));
-		// String splitTest="hola";
-		// for(String t : splitTest.split(":")) System.out.println(t);
-		// String ssad="[IamaconditionRule(ON)?[AndIAmNot(OFF)]]";
-		// System.out.println(ssad.substring(ssad.indexOf("IamaconditionRule")));
-		// System.out.println(numberTree(3,"",""));
-		// QuickSort(new int[] { 12, 3, 4, 7, 33, 2, 44,8, 9, 22 }, 0, 9);
-		// InsertSort(new int[] { 12, 3, 4, 7, 33, 2, 44, 8, 9, 22 });
-		// MergeSort(new int[] { 12, 3, 4, 7, 33, 2, 44, 8, 9, 22 });
-		// System.out.println(Power(2,4));
-		// System.out.println(NPower2(5));
-		// try {
-		// System.out.println(factorial(5));
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-
-		// System.out.println(isIsomorphic("paper","title"));
-		// System.out.println(sumAPoweredB(9, 4000));
-
-		// System.out.println(fizzBuzz(30));
-		// System.out.println(smallestSumMN(1000,87));
-		// System.out.println(minCoinCount(157, 3, 7, 10));
-		// System.out.println(isDivisible9Recursive(153));
-		System.out.println(isDivisible9Sum(936));
 	}
 
 	private static String numberTree(int num, String previous, String align) {
@@ -68,6 +36,31 @@ public class Pruebas extends TestCase {
 
 	}
 
+	/***
+	 * 
+	 * Prints all the permutations of a given String. The algorithm splits the
+	 * string between 2 given a character and based on that character, it does
+	 * the permutations given the two parts of the string.
+	 * 
+	 * EXAMPLE: We have the String "abc", so the calculation will be the
+	 * following. For each step I will show the following format: PREFIX +
+	 * STRING
+	 * 
+	 * STEP 1: "" + "abc" STEP 2: "a" + "bc" STEP 3: "ab" + "c" STEP 4: "abc" +
+	 * "" --> PRINT "abc" STEP 5: "ac" + "b" --> RECURSION BACK TO STEP 3, WE
+	 * CHANGE b for c STEP 6: "acb" + "" --> PRINT "acb" STEP 7: "b" + "ac" -->
+	 * RECURSION BACK TO STEP 2 STEP 8: "ba" + "c" STEP 9: "bac" + "" --> PRINT
+	 * "bac" STEP 10: "bc" + "a" --> RECURSION BACK ON STEP 8 STEP 11: "bca" +
+	 * "" --> PRINT "bca" STEP 12: "c" + "ab" --> RECURSION BACK TO STEP 2 STEP
+	 * 13: "ca" + "b" STEP 14: "cab" + "" --> PRINT "cab" STEP 15: "cb" + "a"
+	 * --> RECURSION BACK TO STEP 13 STEP 16: "cba" + "" --> PRINT "cba" ENDED
+	 * (Var String is Empty)
+	 * 
+	 * @param prefix
+	 *            Prefix of the current Step (starts Empty)
+	 * @param string
+	 *            Sufix of the current Step (starts with the full string)
+	 */
 	private static void permutation(String prefix, String string) {
 		int size = string.length();
 		if (string.isEmpty())
@@ -78,6 +71,15 @@ public class Pruebas extends TestCase {
 		}
 	}
 
+	/***
+	 * 
+	 * As the name says, it returns the integer reversed (EXAMPLE: 34 would be
+	 * 43)
+	 * 
+	 * @param num
+	 *            Number to reverse
+	 * @return The number inversed
+	 */
 	private static int reverseInteger(int num) {
 		int auxNum = 0;
 		while (num != 0) {
@@ -90,7 +92,30 @@ public class Pruebas extends TestCase {
 		return auxNum;
 	}
 
+	@Test
+	public void testReverseInteger() {
+		assertEquals(3, reverseInteger(3));
+		assertEquals(23, reverseInteger(32));
+		assertEquals(2465, reverseInteger(5642));
+		assertEquals(11, reverseInteger(11));
+		assertNotSame(324, reverseInteger(432));
+		assertEquals(-11, reverseInteger(-11));
+		assertEquals(-123, reverseInteger(-321));
+		assertNotSame(123, reverseInteger(-321));
+	}
+
+	/***
+	 * It returns the binary value of the number
+	 * 
+	 * @param num
+	 *            Number to transform
+	 * @return Binary format of the number
+	 */
 	private static String intToBinaryString(int num) {
+
+		if (num == 0)
+			return "0";
+
 		StringBuilder builder = new StringBuilder();
 
 		while (num != 0) {
@@ -101,6 +126,23 @@ public class Pruebas extends TestCase {
 		return builder.toString();
 	}
 
+	@Test
+	public void testIntToBinaryString() {
+		assertNotSame("101", intToBinaryString(12));
+		assertEquals("11", intToBinaryString(3));
+		assertEquals("10111", intToBinaryString(23));
+		assertEquals("0", intToBinaryString(0));
+		assertThat(intToBinaryString(-23), CoreMatchers.containsString("11101001"));
+	}
+
+	/***
+	 * 
+	 * Given a number, count the number of ones which have its binary number
+	 * 
+	 * @param num
+	 *            Number to compute the operation
+	 * @return Number of binary ones
+	 */
 	private static int numberOfOnes(int num) {
 		int ones = 0;
 		// if(num<0) num=~num;
@@ -113,6 +155,26 @@ public class Pruebas extends TestCase {
 		return ones;
 	}
 
+	@Test
+	public void testNumberOfOnes() {
+		assertNotSame(3, numberOfOnes(12));
+		assertEquals(29, numberOfOnes(-12));
+		assertEquals(2, numberOfOnes(3));
+		assertEquals(31, numberOfOnes(-2));
+		assertEquals(4, numberOfOnes(23));
+		assertEquals(0, numberOfOnes(0));
+		assertEquals(29, numberOfOnes(-23));
+	}
+
+	/***
+	 * 
+	 * Problem solving FizzBuzz. Prints the numbers as is, except number 3 which
+	 * is replaced by Fizz and 5 which is replaced by Buzz
+	 * 
+	 * @param n
+	 *            Maximum number to print
+	 * @return FizzBuzz String
+	 */
 	private static String fizzBuzz(int n) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 1; i <= n; i++) {
@@ -131,9 +193,22 @@ public class Pruebas extends TestCase {
 		return result.toString();
 	}
 
+	/***
+	 * 
+	 * Return a String containing the prime numbers until num
+	 * 
+	 * EXAMPLE: If num is 5, the result is: 2,3,5
+	 * 
+	 * @param num
+	 *            Maximum number to print all the prime numbers
+	 * @return The prime numbers, or empty string if the number is not
+	 *         appropiate (num<2)
+	 */
 	private static String primeNumbers(int num) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 2; i <= num; i++) {
+			if (i % 2 == 0 && i != 2)
+				continue;
 			boolean prime = true;
 			for (int j = 2; j <= Math.sqrt(i); j++) {
 				if (i % j == 0) {
@@ -141,11 +216,23 @@ public class Pruebas extends TestCase {
 					break;
 				}
 			}
-			if (prime)
-				result.append(i).append(", ");
+			if (prime) {
+				if (result.length() != 0)
+					result.append(", ");
+				result.append(i);
+			}
 		}
+
 		System.out.println(result.toString());
 		return result.toString();
+	}
+
+	@Test
+	public void testPrimeNumbers() {
+		assertEquals("", primeNumbers(-12));
+		assertEquals("2, 3, 5", primeNumbers(5));
+		assertEquals("2, 3, 5", primeNumbers(6));
+		assertEquals("2, 3, 5, 7, 11, 13, 17, 19, 23", primeNumbers(25));
 	}
 
 	private static void combinations(String string, int N) {
@@ -158,37 +245,77 @@ public class Pruebas extends TestCase {
 
 	}
 
+	/***
+	 * 
+	 * Informs whether a number is prime
+	 * 
+	 * @param num
+	 *            Number to check
+	 * @return True if is prime, False otherwise
+	 */
 	private static boolean isPrime(int num) {
-		boolean prime = true;
-		for (int i = 2; i <= Math.sqrt(num); i++) {
+		boolean prime = num > 1;
+		for (int i = 2; i <= Math.sqrt(num) && prime; i++) {
 			if (num % i == 0) {
 				prime = false;
-				break;
 			}
 		}
 		return prime;
 	}
 
-	private static void factors(int num) {
-		if (num > 0) {
-			StringBuilder builder = new StringBuilder();
-			while (num > 1) {
-				int divisor = num;
-				if (num % 2 == 0) {
-					divisor = 2;
-				} else if (!isPrime(num)) {
-					for (int i = 2; i <= Math.sqrt(num); i++) {
-						if (num % i == 0) {
-							divisor = i;
-							break;
-						}
+	@Test
+	public void testIsPrime() {
+		assertEquals(false, isPrime(-12));
+		assertEquals(false, isPrime(0));
+		assertEquals(false, isPrime(1));
+		assertEquals(true, isPrime(3));
+		assertEquals(false, isPrime(6));
+		assertEquals(true, isPrime(23));
+		assertEquals(true, isPrime(127));
+	}
+
+	/***
+	 * 
+	 * Return the factors of a number
+	 * 
+	 * EXAMPLE: 12 returns 2,2,3
+	 * 
+	 * @param num
+	 *            Number to get its factors
+	 * @return A String containing the factors
+	 */
+	private static String factors(int num) {
+		StringBuilder builder = new StringBuilder();
+		while (num > 1) {
+			int divisor = num;
+			if (num % 2 == 0) {
+				divisor = 2;
+			} else if (!isPrime(num)) {
+				for (int i = 3; i <= Math.sqrt(num); i++) {
+					if (num % i == 0) {
+						divisor = i;
+						break;
 					}
 				}
-				builder.append(divisor + ",");
-				num /= divisor;
 			}
-			System.out.println(builder.toString());
+			if (builder.length() > 0)
+				builder.append(", ");
+			builder.append(divisor);
+			num /= divisor;
 		}
+		return builder.toString();
+	}
+
+	@Test
+	public void testFactors() {
+		assertEquals("", factors(0));
+		assertEquals("", factors(-12));
+		assertEquals("", factors(1));
+		assertEquals("2, 3", factors(6));
+		assertEquals("5", factors(5));
+		assertEquals("2, 11", factors(22));
+		assertEquals("2, 2, 3", factors(12));
+		assertEquals("2, 3, 7", factors(42));
 	}
 
 	private static int largestNumberSubset(int number, int digitsToRemove) {
@@ -219,7 +346,25 @@ public class Pruebas extends TestCase {
 
 	}
 
+	/***
+	 * 
+	 * Return the digit of num located at index position. IMPORTANT: It
+	 * calculates the digit from right to left
+	 * 
+	 * 
+	 * EXAMPLE: If num is 134 and index is 2, returns 3
+	 * 
+	 * ANOTHER EXAMPLE: If num is 326 and index is 0, it returns 6
+	 * 
+	 * @param num
+	 *            Number
+	 * @param index
+	 *            Index of the desired digit
+	 * @return The digit of num located at indexth position, or -1 if the index
+	 *         is out of range
+	 */
 	private static int getDigit(int num, int index) {
+		num = Math.abs(num);
 		int numLength = (int) Math.log10(num) + 1;
 		if (index > numLength)
 			return -1;
@@ -237,7 +382,25 @@ public class Pruebas extends TestCase {
 		return -1;
 	}
 
-	public static void printArray(int[] A) {
+	@Test
+	public void testGetDigit() {
+		assertEquals(-1, getDigit(0, 1));
+		assertEquals(2, getDigit(23, 1));
+		assertEquals(3, getDigit(23, 0));
+		assertEquals(7, getDigit(1247423, 3));
+		assertEquals(7, getDigit(-1247423, 3));
+		assertEquals(3, getDigit(-343, 0));
+	}
+
+	/***
+	 * 
+	 * Returns a String representing an int array.
+	 * 
+	 * @param A
+	 *            Array to get the string
+	 * @return An String of the array in format [1,2,3...]
+	 */
+	public static String ArrayToString(int[] A) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[");
 
@@ -249,19 +412,69 @@ public class Pruebas extends TestCase {
 
 		builder.append("]");
 
-		System.out.println(builder.toString());
+		return builder.toString();
 	}
 
-	public static void QuickSort(int[] A, int min, int max) {
-		if (min < max) {
+	/***
+	 * 
+	 * It sorts an array of ints A using QuickSort. It cals the auxiliary
+	 * function QuickSortRecursive which performs the recursive cases.
+	 * 
+	 * 
+	 * @param A
+	 *            Array to sort
+	 * 
+	 */
+	public static String QuickSort(int[] A) {
+		return QuickSortRecursive(A, 0, A.length - 1);
+	}
+
+	/***
+	 * 
+	 * Implements the recursivity of QuickSort algorithm using an int array A.
+	 * It splits the array in 2 parts: One using [min,....,partition-1] and
+	 * other [partition+1,....,max]
+	 * 
+	 * It prints the Time in milliseconds which it takes
+	 * 
+	 * 
+	 * @param A
+	 *            Array to sort
+	 * @param min
+	 *            Minimum index
+	 * @param max
+	 *            Maximum index
+	 */
+	public static String QuickSortRecursive(int[] A, int min, int max) {
+
+		long time = System.currentTimeMillis();
+
+		if (A.length > 1 && min < max) {
 			int partition = QSPartition(A, min, max);
 
-			QuickSort(A, min, partition - 1);
-			QuickSort(A, partition + 1, max);
+			QuickSortRecursive(A, min, partition - 1);
+			QuickSortRecursive(A, partition + 1, max);
 		}
-		printArray(A);
+
+		System.out.println("TIME TAKEN: " + (System.currentTimeMillis() - time) + " ms");
+		return ArrayToString(A);
+
 	}
 
+	/***
+	 * 
+	 * Sorts a part of an array of ints from min to max and returns the last
+	 * sorted index. The pivot is the half point of the array. All the ints
+	 * greather than the pivot go right, and the lower go left.
+	 * 
+	 * @param A
+	 *            Array of ints
+	 * @param min
+	 *            Minimum index of the interval
+	 * @param max
+	 *            Maximum index of the interval
+	 * @return The index of the pivot
+	 */
 	private static int QSPartition(int[] A, int min, int max) {
 		int pivotIndex = (min + max) / 2;
 
@@ -289,14 +502,44 @@ public class Pruebas extends TestCase {
 		return i;
 	}
 
+	@Test
+	public void testQuickSort() {
+		assertEquals("[1,3,5,7,10]", QuickSort(new int[] { 1, 5, 3, 10, 7 }));
+		assertEquals("[10]", QuickSort(new int[] { 10 }));
+		assertEquals("[]", QuickSort(new int[] {}));
+		assertEquals("[0,1,5,6,9,10,23,25,34,53,61,65,99,167,230,243,535]", QuickSort(new int[] { 9, 5, 167, 53, 243, 23, 25, 65, 99, 230, 535, 61, 34, 10, 6, 1, 0 }));
+	}
+
+	/***
+	 * 
+	 * Given an int array A, and index i and an index j, swaps both index of the
+	 * array
+	 * 
+	 * @param A
+	 *            Array
+	 * @param i
+	 *            Index 1
+	 * @param j
+	 *            Index 2
+	 */
 	private static void swap(int[] A, int i, int j) {
+
+		if (i < 0 || i >= A.length || j < 0 || j >= A.length)
+			return;
+
 		int aux = A[i];
 		A[i] = A[j];
 		A[j] = aux;
 	}
 
+	/***
+	 * 
+	 * This function performs the InsertSort algorithm.
+	 * 
+	 * @param A
+	 *            Array of ints to sort
+	 */
 	public static void InsertSort(int[] A) {
-		printArray(A);
 
 		for (int i = 1; i < A.length; i++) {
 			int j = i;
@@ -306,29 +549,62 @@ public class Pruebas extends TestCase {
 			}
 		}
 
-		printArray(A);
 	}
 
-	public static int Power(int base, int exp) {
+	/***
+	 * 
+	 * Powers the base number to the exp. (Only works with positive exp)
+	 * 
+	 * Example: If base is 2 and exp is 4, it returns 16
+	 * 
+	 * @param base
+	 *            Base number
+	 * @param exp
+	 *            Exponent number
+	 * @return Base powered to Exponent
+	 * @throws Exception
+	 */
+	public static int Power(int base, int exp) throws Exception {
+		if (exp < 0)
+			throw new Exception("Exponent less than 0");
 		if (exp == 0)
 			return 1;
-		else
-			return base * Power(base, exp - 1);
+		else {
+			if (base == 2)
+				return base << (exp - 1);
+			else
+				return base * Power(base, exp - 1);
+		}
 	}
 
-	public static int NPower2(int n) {
-		return (2 << n) - 2;
-		// int suma=0;
-		// int power=1;
-		// for(int i=1; i<=n; i++)
-		// {
-		// power*=2;
-		// suma+=power;
-		// }
-		//
-		// return suma;
+	@Test
+	public void testPower() {
+		try {
+			assertEquals(4, Power(2, 2));
+			assertEquals(1, Power(2, 0));
+			assertEquals(2, Power(2, 1));
+			assertEquals(1, Power(5, 0));
+			assertEquals(25, Power(5, 2));
+			assertEquals(32, Power(2, 5));
+			assertEquals(32, Power(2, 5));
+			assertEquals(-32, Power(-2, 5));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// assertEquals(0, Power(2,-1));
 	}
 
+	/***
+	 * 
+	 * Returns the factorial of n
+	 * 
+	 * @param n
+	 *            Number to calculate Factorial
+	 * @return The factorial of n
+	 * @throws Exception
+	 *             n is out of range
+	 */
 	public static int factorial(int n) throws Exception {
 		if (n < 0)
 			throw new Exception("Número fuera de rango");
@@ -338,6 +614,30 @@ public class Pruebas extends TestCase {
 			return n * factorial(n - 1);
 	}
 
+	@Test
+	public void testFactorial() throws Exception {
+		assertEquals(2, factorial(2));
+		assertEquals(1, factorial(0));
+		assertEquals(6 * 5 * 4 * 3 * 2, factorial(6));
+		assertEquals(8 * 7 * 6 * 5 * 4 * 3 * 2, factorial(8));
+	}
+
+	/***
+	 * 
+	 * An isomorphic String is an String which, changed with other letters, can
+	 * form the other String. The main rule is that a letter must be equal in
+	 * all the word (if we change "l" for "m", all "l" must be "m")
+	 * 
+	 * Example:
+	 * 
+	 * hellos is isomorphic with hammer, but not with papers
+	 * 
+	 * @param s
+	 *            String one
+	 * @param t
+	 *            String two
+	 * @return If the String s is isomorphic with t
+	 */
 	public static boolean isIsomorphic(String s, String t) {
 		if (s == null || t == null)
 			return false;
@@ -351,20 +651,32 @@ public class Pruebas extends TestCase {
 		StringBuilder tBuilder = new StringBuilder(t);
 		HashMap<Character, Character> map = new HashMap<Character, Character>();
 		for (int i = 0; i < s.length(); i++) {
-			if (map.containsKey(tBuilder.charAt(i)))
+			if(map.containsKey(tBuilder.charAt(i)))
+			{
 				tBuilder.setCharAt(i, map.get(tBuilder.charAt(i)));
-			else {
-				map.put(tBuilder.charAt(i), s.charAt(i));
+			}
+			else if (!map.containsValue(s.charAt(i)))
+			{
+				
+			}
+			else
+			{
+				map.put(tBuilder.charAt(i),s.charAt(i));
 				tBuilder.setCharAt(i, s.charAt(i));
 			}
-
-			// if(s.charAt(i)!=tBuilder.charAt(i)){
-			// tBuilder.setCharAt(i, s.charAt(i));
-			// }
 		}
 
 		return s.equals(tBuilder.toString());
 
+	}
+
+	@Test
+	public void testIsomorphic(){
+		assertEquals(true, isIsomorphic("",""));
+		assertEquals(false, isIsomorphic("","sad"));
+		assertEquals(true, isIsomorphic("paper","title"));
+		assertEquals(false, isIsomorphic("aaaa","bcde"));
+		assertEquals(false, isIsomorphic("paper","tiles"));
 	}
 
 	/***
@@ -617,30 +929,32 @@ public class Pruebas extends TestCase {
 	// String reverse and pairing reversed words
 	// Reverse a string
 	// Find matching anagrams in a word list
-//	public HashMap<String,List<String>> findAnagrams(List<String> words, String text) {
-//		HashMap<String,List<String>> anagrams = new HashMap<String,List<String>>();
-//
-//		if (text != null && !words.isEmpty() && !text.isEmpty()) {
-//			
-//			for (String s : text.split("\\s+")) {
-//				for(String word : words)
-//				{
-//					if(isAnagram(s,word))
-//					{
-//						if(anagrams.containsKey(word))
-//						{
-//							anagrams.get(word).add(s);
-//						}
-//						else{
-//							anagrams.put(word,Arrays.asList(new String[] {s }));
-//						}
-//					}
-//				}
-//			}
-//			
-//		}
-//		return anagrams;
-//	}
+	// public HashMap<String,List<String>> findAnagrams(List<String> words,
+	// String text) {
+	// HashMap<String,List<String>> anagrams = new
+	// HashMap<String,List<String>>();
+	//
+	// if (text != null && !words.isEmpty() && !text.isEmpty()) {
+	//
+	// for (String s : text.split("\\s+")) {
+	// for(String word : words)
+	// {
+	// if(isAnagram(s,word))
+	// {
+	// if(anagrams.containsKey(word))
+	// {
+	// anagrams.get(word).add(s);
+	// }
+	// else{
+	// anagrams.put(word,Arrays.asList(new String[] {s }));
+	// }
+	// }
+	// }
+	// }
+	//
+	// }
+	// return anagrams;
+	// }
 
 	public boolean isAnagram(String A, String B) {
 		if (A == null || B == null)
@@ -705,65 +1019,60 @@ public class Pruebas extends TestCase {
 		assertEquals(false, isAnagram("da", "bc"));
 		assertEquals(true, isAnagram("yuaReqBNs", "sBqNeRyau"));
 	}
-	
-	public String reverseWords(String text)
-	{
-		if(text==null) return null;
-		if(text.isEmpty()) return text;
-		
+
+	public String reverseWords(String text) {
+		if (text == null)
+			return null;
+		if (text.isEmpty())
+			return text;
+
 		StringBuilder builder = new StringBuilder();
-		
-		for(String w : text.trim().split("\\s+"))
-		{
-			builder.insert(0, " "+w);
+
+		for (String w : text.trim().split("\\s+")) {
+			builder.insert(0, " " + w);
 		}
-		
+
 		return builder.toString().trim();
 	}
-	
+
 	@Test
 	public void testReverseWords() {
 		assertEquals("", reverseWords(""));
 		assertEquals("world Hello", reverseWords("Hello world"));
 		assertEquals("cinco cuatro tres dos uno", reverseWords("uno dos   tres    cuatro cinco"));
 	}
-	
-	public long maxRearangedInt(long number)
-	{
-		long result=0;
-		int pow=0;
-		while(number!=0)
-		{
-			long digit = number%10;
-			
-			if(result==0)
-				result=digit;
-			else{
-				boolean inserted=false;
-				int result_length = (int) Math.log10(result)+1;
-				for(int i=0; !inserted && i<result_length; ++i)
-				{
-					int power10 =(int) Math.pow(10, i);
-					int resdigit = (int) (result/power10)%10;
-					
-					if(resdigit>=digit)
-					{
-						int result_right=(int) ((result/power10)*Math.pow(10, i+1));
-						int result_center = (int) (digit*power10);
-						int result_left=(int) (result%power10);
-						result=result_right+result_center+result_left;
-						inserted=true;
+
+	public long maxRearangedInt(long number) {
+		long result = 0;
+		int pow = 0;
+		while (number != 0) {
+			long digit = number % 10;
+
+			if (result == 0)
+				result = digit;
+			else {
+				boolean inserted = false;
+				int result_length = (int) Math.log10(result) + 1;
+				for (int i = 0; !inserted && i < result_length; ++i) {
+					int power10 = (int) Math.pow(10, i);
+					int resdigit = (int) (result / power10) % 10;
+
+					if (resdigit >= digit) {
+						int result_right = (int) ((result / power10) * Math.pow(10, i + 1));
+						int result_center = (int) (digit * power10);
+						int result_left = (int) (result % power10);
+						result = result_right + result_center + result_left;
+						inserted = true;
 					}
 				}
-				if(!inserted)
-				{
-					result=result+(digit*(int)Math.pow(10,result_length));
+				if (!inserted) {
+					result = result + (digit * (int) Math.pow(10, result_length));
 				}
 			}
-			number/=10;
+			number /= 10;
 			pow++;
 		}
-		
+
 		return result;
 	}
 
@@ -771,51 +1080,46 @@ public class Pruebas extends TestCase {
 	public void testRearangedInt() {
 		assertEquals(32, maxRearangedInt(23));
 		assertEquals(521, maxRearangedInt(125));
-		assertEquals(8765543, maxRearangedInt(8754365 ));
+		assertEquals(8765543, maxRearangedInt(8754365));
 	}
-	
-	public boolean isPalindrome(int number)
-	{
-		boolean palindrome=true;
-		int length=(int) Math.log10(number);
-		int i=0, j=length;
-		while(palindrome && j>i)
-		{
-			int power=(int) Math.pow(10, j+1);
-			int largest_digit = (number/(power/10))%10;
-//			largest_digit=number/power;
-			int lowerpower=(int) Math.pow(10, i+1);
-//			int lowest_digit = (number%lowerpower)-((number%(int)Math.pow(10,i))*(int)Math.pow(10,i-1));
-			int lowest_digit = (number%lowerpower)/(int)Math.pow(10, i);
-			
-			palindrome=largest_digit==lowest_digit;
-			
+
+	public boolean isPalindrome(int number) {
+		boolean palindrome = true;
+		int length = (int) Math.log10(number);
+		int i = 0, j = length;
+		while (palindrome && j > i) {
+			int power = (int) Math.pow(10, j + 1);
+			int largest_digit = (number / (power / 10)) % 10;
+			// largest_digit=number/power;
+			int lowerpower = (int) Math.pow(10, i + 1);
+			// int lowest_digit =
+			// (number%lowerpower)-((number%(int)Math.pow(10,i))*(int)Math.pow(10,i-1));
+			int lowest_digit = (number % lowerpower) / (int) Math.pow(10, i);
+
+			palindrome = largest_digit == lowest_digit;
+
 			j--;
 			i++;
-			
+
 		}
 		return palindrome;
 	}
-	
-	public int largestPalindromeProduct()
-	{
+
+	public int largestPalindromeProduct() {
 		long time = System.currentTimeMillis();
-		int result=0;
-		for(int i=999; i>=100; i--)
-		{
-			for(int j=999; j>i; j--)
-			{
-				if(isPalindrome(i*j))
-				{
-					result=Math.max(result, i*j);
+		int result = 0;
+		for (int i = 999; i >= 100; i--) {
+			for (int j = 999; j > i; j--) {
+				if (isPalindrome(i * j)) {
+					result = Math.max(result, i * j);
 				}
 			}
 		}
-		
-		System.out.println("Largest Palindrome Product Time : "+(System.currentTimeMillis()-time));
+
+		System.out.println("Largest Palindrome Product Time : " + (System.currentTimeMillis() - time));
 		return result;
 	}
-	
+
 	@Test
 	public void testIsPalindrome() {
 		assertEquals(true, isPalindrome(1225221));
@@ -825,10 +1129,10 @@ public class Pruebas extends TestCase {
 		assertEquals(true, isPalindrome(323));
 		assertEquals(false, isPalindrome(133));
 	}
-	
+
 	@Test
 	public void testlargestPalindrome() {
 		System.out.println(largestPalindromeProduct());
 	}
-	
+
 }
