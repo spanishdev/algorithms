@@ -1,13 +1,16 @@
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 import junit.framework.TestCase;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unused")
 public class Pruebas extends TestCase {
@@ -651,17 +654,10 @@ public class Pruebas extends TestCase {
 		StringBuilder tBuilder = new StringBuilder(t);
 		HashMap<Character, Character> map = new HashMap<Character, Character>();
 		for (int i = 0; i < s.length(); i++) {
-			if(map.containsKey(tBuilder.charAt(i)))
-			{
+			if (map.containsKey(tBuilder.charAt(i))) {
 				tBuilder.setCharAt(i, map.get(tBuilder.charAt(i)));
-			}
-			else if (!map.containsValue(s.charAt(i)))
-			{
-				
-			}
-			else
-			{
-				map.put(tBuilder.charAt(i),s.charAt(i));
+			} else if (!map.containsValue(s.charAt(i))) {
+				map.put(tBuilder.charAt(i), s.charAt(i));
 				tBuilder.setCharAt(i, s.charAt(i));
 			}
 		}
@@ -671,12 +667,15 @@ public class Pruebas extends TestCase {
 	}
 
 	@Test
-	public void testIsomorphic(){
-		assertEquals(true, isIsomorphic("",""));
-		assertEquals(false, isIsomorphic("","sad"));
-		assertEquals(true, isIsomorphic("paper","title"));
-		assertEquals(false, isIsomorphic("aaaa","bcde"));
-		assertEquals(false, isIsomorphic("paper","tiles"));
+	public void testIsomorphic() {
+		assertEquals(true, isIsomorphic("", ""));
+		assertEquals(false, isIsomorphic("", "sad"));
+		assertEquals(true, isIsomorphic("paper", "title"));
+		assertEquals(false, isIsomorphic("aaaa", "bcde"));
+		assertEquals(false, isIsomorphic("bcde", "aaaa"));
+		assertEquals(false, isIsomorphic("paper", "tiles"));
+		assertEquals(true, isIsomorphic("trefd", "abvdt"));
+		assertEquals(true, isIsomorphic("hello", "sally"));
 	}
 
 	/***
@@ -709,7 +708,24 @@ public class Pruebas extends TestCase {
 		return sum;
 	}
 
+	@Test
+	public void testSumAPoweredB() {
+		assertEquals(-1, sumAPoweredB(10, 4000));
+		assertEquals(-1, sumAPoweredB(5, 4004));
+		assertEquals(-1, sumAPoweredB(-1, 3212));
+		assertEquals(-1, sumAPoweredB(3, -1));
+		assertEquals(8, sumAPoweredB(5, 3));
+	}
+
+	/***
+	 * 
+	 * @param n
+	 *            Number
+	 * @return The sum of its digits
+	 */
 	public static int sum_of_digits(int n) {
+		if (n < 0)
+			return -1;
 		int sum = 0;
 		int num_digits = (int) Math.log10(n) + 1;
 		for (int i = num_digits; i >= 0; i--) {
@@ -719,6 +735,14 @@ public class Pruebas extends TestCase {
 
 		return sum;
 
+	}
+
+	@Test
+	public void testSum_of_digits() {
+		assertEquals(5, sum_of_digits(5));
+		assertEquals(5, sum_of_digits(23));
+		assertEquals(17, sum_of_digits(1934));
+		assertEquals(-1, sum_of_digits(-1934));
 	}
 
 	/***
@@ -737,7 +761,7 @@ public class Pruebas extends TestCase {
 	 * @return
 	 */
 	public static int smallestSumMN(int M, int N) {
-		if (M < 100 || N >= 100)
+		if (M < 100 || M > 10000 || N < 0 || N > 100)
 			return -1;
 
 		int sum = -1;
@@ -751,6 +775,16 @@ public class Pruebas extends TestCase {
 		return sum;
 	}
 
+	@Test
+	public void testSmallestSumMN() {
+		assertEquals(-1, smallestSumMN(5, 10));
+		assertEquals(-1, smallestSumMN(150, 101));
+		assertEquals(-1, smallestSumMN(10001, 100));
+		assertEquals(-1, smallestSumMN(1056, -1));
+		assertEquals(10699, smallestSumMN(10000, 25));
+		assertEquals(89999, smallestSumMN(150, 44));
+	}
+
 	/***
 	 * Find minimum number of coins (count and list of coins too)
 	 * 
@@ -761,35 +795,64 @@ public class Pruebas extends TestCase {
 	 * the algorithm should find the optimal 2 coins required: 3 + 3.
 	 * 
 	 * @param value
-	 * @param coins
-	 * @return
+	 *            Value to pay
+	 * @param denominations
+	 *            Denominations of the coins
+	 * @return The minimum number of coins to pay
+	 * @throws Exception
 	 */
+	public static int minCoinCount(int value, int... denominations) throws Exception {
+		if (value <= 0)
+			return 0;
+		
+		if(denominations.length==0)
+			return 0;
 
-	// Asume sorted denominations
-	public static int minCoinCount(int value, int... denominations) {
-		int sum = 0, previoussum = 0, currentValue = 0;
+		Arrays.sort(denominations);
 
-		while (currentValue < value) {
-			for (int i = denominations.length - 1; i >= 0; i--) {
-				if (currentValue + denominations[i] <= value) {
-					currentValue += denominations[i];
-					sum++;
-					break;
-				}
+		int[] sums = new int[value + 1];
+		sums[0] = 0;
+
+		for (int i = 1; i < value + 1; i++)
+			sums[i] = Integer.MAX_VALUE;
+
+		for (int i = 1; i <= value; i++)
+		{
+			for (int coin : denominations) 
+			{
+				if(i>=coin && sums[i-coin]+1<sums[i] && sums[i-coin]!=Integer.MAX_VALUE)
+					sums[i]=sums[i-coin]+1;
 			}
-			if (previoussum == sum)
-				break;
-
-			previoussum = sum;
 		}
 
-		if (currentValue == value)
-			return sum;
-		else
-			return -1;
+		return sums[value];
+	}
+
+	@Test
+	public void testMinCoinCount() throws Exception {
+		assertEquals(0, minCoinCount(-10, 10));
+		assertEquals(Integer.MAX_VALUE, minCoinCount(11, 5, 4));
+		assertEquals(3, minCoinCount(10, 3, 4));
+		assertEquals(3, minCoinCount(10, 4, 3));
+		assertEquals(2, minCoinCount(10, 1, 5, 3));
+		assertEquals(2, minCoinCount(6, 3, 4));
+		assertEquals(4, minCoinCount(20, 2, 6));
+		assertEquals(3, minCoinCount(23, 5, 13, 15));
+		assertEquals(5, minCoinCount(15, 1, 6));
+		assertEquals(6, minCoinCount(19, 1, 5, 10, 20));
 
 	}
 
+
+	/***
+	 * 
+	 * Tells whether number N is divisible by 9. It must be calculated without
+	 * using division.
+	 * 
+	 * @param N
+	 *            Number
+	 * @return True if N is divisible by 9, otherwise False
+	 */
 	public static boolean isDivisible9Recursive(int N) {
 		if (N < 9)
 			return false;
@@ -799,15 +862,12 @@ public class Pruebas extends TestCase {
 		return isDivisible9Recursive(N - 9);
 	}
 
-	private static boolean isDivisible9Sum(int N) {
-		System.out.println("N MOD 9: " + N % 9);
-		int suma = sum_of_digits(N);
-		if (suma > 9) {
-			while (suma > 9) {
-				suma = sum_of_digits(suma);
-			}
-		}
-		return suma == 9;
+	@Test
+	public void testIsDivisible9Recursive() {
+		assertEquals(false, isDivisible9Recursive(10));
+		assertEquals(false, isDivisible9Recursive(0));
+		assertEquals(true, isDivisible9Recursive(18));
+		assertEquals(true, isDivisible9Recursive(81));
 	}
 
 	/***
@@ -817,8 +877,8 @@ public class Pruebas extends TestCase {
 	 * Constraints:
 	 * 
 	 * Must be in Java 7 Elements will always be positive or 0 and never point
-	 * outside the array Elements will never point to themselves There will
-	 * always be a cycle The cycle will be at least length 2
+	 * outside the array. Elements will never point to themselves. There will
+	 * always be a cycle. The cycle will be at least length 2.
 	 * 
 	 * Input: array = [1, 3, 0, 4, 1] Output: 3
 	 * 
@@ -896,8 +956,9 @@ public class Pruebas extends TestCase {
 
 	@Test
 	public void testReverseBinary() {
-		// assertEquals(0, reverseBinary(1));
-		// assertEquals(1, reverseBinary(2));
+		assertEquals(-1, reverseBinary(0));
+		assertEquals(1, reverseBinary(1));
+		assertEquals(1, reverseBinary(2));
 		assertEquals(11, reverseBinary(13));
 		assertEquals(61, reverseBinary(47));
 	}
